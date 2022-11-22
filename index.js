@@ -1,15 +1,49 @@
 const inquirer = require('inquirer');
-const Employee = require('./lib/employee');
-const {writeFile} = require('fs').promises;
 const Manager = require('./lib/manager');
+const Engineer = require('./lib/engineer');
+const fs = require('fs');
+const Intern = require('./lib/intern');
+const theTeam = [];
 
-const questions = () => {
+const managerQuestions = () => {
+    return inquirer.prompt([
+        {
+            type: 'input',
+            name: 'name',
+            message: "Enter the manager's name",
+        },
+        {
+            type: 'input',
+            name: 'id',
+            message: "Enter the manager's ID number",
+        },
+        {
+            type: 'input',
+            name: 'email',
+            message: "Enter the manager's email address",
+        },   
+        {
+            type: 'input',
+            name: 'office',
+            message: "Enter the manager's office number",
+        },
+    ])
+    .then(managerData => {
+        const { name, id, email, office} = managerData;
+        const manager = new Manager (name, id, email, office);
+        theTeam.push(manager);
+        console.log(theTeam);
+        team();
+    })
+};
+
+const team = () => {
     return inquirer.prompt([
         {
             type: 'list',
-            name: 'type',
+            name: 'role',
             message:"What kind of employee would you like to add?",
-            choices: ['Manager', 'Engineer', 'Intern'] ,
+            choices: ['Engineer', 'Intern'] ,
         },
         {
             type: 'input',
@@ -19,7 +53,7 @@ const questions = () => {
         {
             type: 'input',
             name: 'id',
-            message: "Enter the Employee's ID number",
+            message: "Enter the employee's ID number",
         },
         {
             type: 'input',
@@ -28,50 +62,47 @@ const questions = () => {
         },
         {
             type: 'input',
-            name: 'office',
-            message: "enter the empoyee's office number",
-            when: (answers) => answers.type == 'Manager',
-        },
-        {
-            type: 'input',
             name: 'github',
-            message: "enter the empoyee's Github",
-            when: (answers) => answers.type == 'Engineer',
+            message: "Enter the employee's Github",
+            when: (data) => data.role == 'Engineer',
         },
         {
             type: 'input',
             name: 'school',
-            message: "enter the empoyee's school",
-            when: (answers) => answers.type == 'Intern',
+            message: "Enter the employee's school",
+            when: (data) => data.role == 'Intern',
+         },
+         {
+            type: 'confirm',
+            name: 'addNewEmployee',
+            message: 'would you like to add another team member?',
+            default: false,
          },
     ])
+    .then(employeeData => {
+        const { role, name, id, email, github, school, addNewEmployee } = employeeData;
+        let employee;
+        if (role==="Engineer") {
+            employee = new Engineer(name, id, email, github);
+            console.log(employee);
+        } else if (role==="Intern") {
+            employee = new Intern (name, id, email, school);
+            console.log(employee);
+        }   theTeam.push(employee);
+        if (addNewEmployee) {
+            return team();
+        } else {
+            console.log(theTeam);
+        }
+    })
 };
 
 
-function typeSelect({type}){
-
-    switch(type) {
-        case 'Manager':
-            new Manager({name, id, email, office});
-        break;
-        case 'Engineer':
-            engineerQuestion();
-        break;
-        case 'Intern':
-            internQuestion();
-        break;
-    }
-};
-    // Function to initialize app
+            
+// Function to initialize app
 const init = () => {
-    questions()
-    // .then((answers) => typeSelect(answers))
-    .then(() => test())
-    .catch((err) => console.error(err));
+    managerQuestions()
 };
 
-function test() {
-    console.log('test');
-}
 // Function call to initialize app
 init();
