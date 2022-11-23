@@ -30,7 +30,7 @@ const managerQuestions = () => {
     ])
     .then(managerData => {
         const { name, id, email, office} = managerData;
-        const manager = new Manager (name, id, email, office);
+        const manager = new Manager (`Hi there, I'm ${name} id#${id}, my email is ${email} office# ${office}`);
         theTeam.push(manager);
         console.log(theTeam);
         team();
@@ -93,12 +93,62 @@ const team = () => {
             return team();
         } else {
             console.log(theTeam);
+            // fs.writeFile('Main.html', generateHTML());
         }
     })
 };
 
+const generateHTML = () =>
+     `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="src/stylesheet.css"> -->
+    <title>InfiniTeam</title>
+  </head>
+  <body>
+    <header class="row bg-info justify-content-center align-items-center w-auto" style="height: 250px">
+        <div class="col-auto">
+            <h1>Welcome to InfiniTeam</h1> 
+        </div>   
+    </header>
+    <div class="container">
+        <main id='cardDeck' class="row justify-content-center">
 
-            
+            <div class="col-4">
+                <div class="card  mt-3" style="width: 18rem;">
+                    <div class="card-header bg-info">
+                        <h1 id='role' class="display-4">Test Text</h1>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li id='item-1' class="list-group-item">An item</li>
+                            <li id='item-2' class="list-group-item">A second item</li>
+                            <li id='item-3' class="list-group-item">A third item</li>
+                            <li id='item-4' class="list-group-item">A fourth item</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+        
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script>
+    function elementFromHTML(html) {
+        const template = document.createElement('template');
+        template.innerHTML = html.trim();
+        return template.content.firstElementChild;
+    }
+    </script>
+</body>
+</html>`;
+
+
 // Function to initialize app
 const init = () => {
     managerQuestions()
