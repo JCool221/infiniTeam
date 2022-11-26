@@ -1,10 +1,10 @@
-const inquirer = require('inquirer');
+const renderPage = require('./assets/src/renderPage')
 const Manager = require('./lib/manager');
 const Engineer = require('./lib/engineer');
-const fs = require('fs');
 const Intern = require('./lib/intern');
 const Employee = require('./lib/employee');
-const renderPage = require('./assets/src/renderPage')
+const fs = require('fs');
+const inquirer = require('inquirer');
 const theTeam = [];
 
 
@@ -37,11 +37,14 @@ const managerQuestions = () => {
         const manager = new Manager (name, id, email, office);
         theTeam.push(manager);
         console.log(manager);
-        team();
     })    
 };    
 
 const team = () => {
+    console.log(`
+    Add additional Employees
+    ------------------------
+    `)
     return inquirer.prompt([
         {
             type: 'list',
@@ -91,13 +94,12 @@ const team = () => {
             console.log(employee);
         } else if (role==="Intern") {
             employee = new Intern (name, id, email, school);
-            console.log(employee);
         }   theTeam.push(employee);    
         if (addNewEmployee) {
             return team();
         } else {
-            console.log(theTeam);
-           
+            console.log('finished theTeam');
+            return theTeam;
         }    
     })
 };
@@ -111,14 +113,16 @@ const writeFile = data => {
             console.log("success! file created at ./dist/index.html");
         }
     })
-}
+};
 
+// renderPage();
 managerQuestions()
-    // .then(theTeam => {
-    //     return renderCards(theTeam);
-    // })
-    .then(renderPage => {
-        return writeFile(renderPage);
+    .then(team)
+    .then(theTeam => {
+        return renderPage(theTeam);
+    })
+    .then(pageHTML => {
+        return writeFile(pageHTML);
     })
     .catch(err => {
         console.log(err);
