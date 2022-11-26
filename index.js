@@ -4,41 +4,9 @@ const Engineer = require('./lib/engineer');
 const fs = require('fs');
 const Intern = require('./lib/intern');
 const Employee = require('./lib/employee');
+const renderPage = require('./assets/src/renderPage')
 const theTeam = [];
 
-
-const generateHTML = () =>
-     `<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <!-- <link rel="stylesheet" href="src/stylesheet.css"> -->
-    <title>InfiniTeam</title>
-  </head>
-  <body>
-    <header class="row bg-info justify-content-center align-items-center w-auto" style="height: 250px">
-        <div class="col-auto">
-            <h1>Welcome to InfiniTeam</h1> 
-        </div>   
-    </header>
-    <div class="container">
-        <main id='cardDeck' class="row justify-content-center">
-        </main>
-    </div>
-        
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <script>
-    function elementFromHTML(html) {
-        const template = document.createElement('template');
-        template.innerHTML = html.trim();
-        return template.content.firstElementChild;
-    }
-    </script>
-</body>
-</html>`;
 
 
 const managerQuestions = () => {
@@ -67,8 +35,8 @@ const managerQuestions = () => {
     .then(managerData => {
         const { name, id, email, office} = managerData;
         const manager = new Manager (name, id, email, office);
-        theTeam.push(manager.printInfo());
-        console.log(theTeam);
+        theTeam.push(manager);
+        console.log(manager);
         team();
     })    
 };    
@@ -124,21 +92,34 @@ const team = () => {
         } else if (role==="Intern") {
             employee = new Intern (name, id, email, school);
             console.log(employee);
-        }   theTeam.push(employee.printInfo());    
+        }   theTeam.push(employee);    
         if (addNewEmployee) {
             return team();
         } else {
             console.log(theTeam);
-            //fs.writeFile(`main.html`, generateHTML(theTeam));
+           
         }    
-    })    
-};    
-// Function to initialize app
-const init = () => {
-    managerQuestions()
-    // const bob = new Employee('bob', 32, 'bob@bob.com');
-    // bob.printInfo();
+    })
 };
 
-// Function call to initialize app
-init();
+const writeFile = data => {
+    fs.writeFile('./dist/index.html', data, err => {
+        if (err) {
+            console.log(err);
+            return;
+        } else {
+            console.log("success! file created at ./dist/index.html");
+        }
+    })
+}
+
+managerQuestions()
+    // .then(theTeam => {
+    //     return renderCards(theTeam);
+    // })
+    .then(renderPage => {
+        return writeFile(renderPage);
+    })
+    .catch(err => {
+        console.log(err);
+    });
