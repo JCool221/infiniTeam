@@ -94,7 +94,6 @@ const team = () => {
             console.log(employee);
         } else if (role==="Intern") {
             employee = new Intern (name, id, email, school);
-            console.log(employee);
         }   theTeam.push(employee);    
         if (addNewEmployee) {
             return team();
