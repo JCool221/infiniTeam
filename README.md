@@ -21,6 +21,7 @@ Use 'npm intall' to install dependencies
 ## Usage
 
 node index.js runs the program, then just follow the prompts. Page will be rendered to "./dist/index.html"
+[video](https://drive.google.com/file/d/197Yyo_rUqHYEIgmgSBMz9L_mPvGNICX9/view)
 
 <a name="Contributing"></a>
 ## Contributing
